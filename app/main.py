@@ -16,8 +16,7 @@ def main():
                 exit(0)
             else:
                 print(f"{command}: command not found")
-                sys.stdout.write("$ exit 0")
-                exit(0)
+                sys.stdout.write("$ ")
             
     except KeyboardInterrupt as e:
         print("\nExiting...")
