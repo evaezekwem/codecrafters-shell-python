@@ -11,12 +11,12 @@ def main():
         while True:
             command: str = input()
             
-            if command.strip() == "exit":
+            if command.strip() == "exit 0":
                 print("$ exit 0")
                 exit(0)
             else:
                 print(f"{command}: command not found")
-                sys.stdout.write("$ ")
+                sys.stdout.write("$ exit 0")
                 exit(0)
             
     except KeyboardInterrupt as e:
