@@ -11,13 +11,13 @@ def main():
         while True:
             command: str = input()
             print(f"{command}: command not found")
-            sys.stdout.write("$ exit 0")
+            sys.stdout.write("$ ")
             exit(0)
     except KeyboardInterrupt as e:
         print("\nExiting...")
         sys.exit(0)
     finally:
-        sys.stdout.flush()
+        sys.stdout.write("$ ")
         exit(0)
 
 if __name__ == "__main__":
