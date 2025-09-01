@@ -13,6 +13,9 @@ def main():
             
             if command.strip() == "exit 0":
                 exit(0)
+            elif command.strip().startswith("echo "):
+                print(command.strip()[5:])
+                sys.stdout.write("$ ")
             else:
                 print(f"{command}: command not found")
                 sys.stdout.write("$ ")
