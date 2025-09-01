@@ -17,7 +17,7 @@ def main():
         print("\nExiting...")
         sys.exit(0)
     finally:
-        sys.stdout.write("$ ")
+        sys.stdout.flush()
         exit(0)
 
 if __name__ == "__main__":
