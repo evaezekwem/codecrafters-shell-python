@@ -11,7 +11,8 @@ def main():
         while True:
             command: str = input()
             print(f"{command}: command not found")
-            sys.stdout.write("$ ")
+            sys.stdout.write("$ exit 0")
+            exit(0)
     except KeyboardInterrupt as e:
         print("\nExiting...")
         sys.exit(0)
