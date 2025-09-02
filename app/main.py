@@ -20,7 +20,7 @@ def main():
                 print(command.strip()[5:])
                 sys.stdout.write("$ ")
             elif command.strip().startswith("type "): #and command.strip().split()[1].strip in builtins_cmds:
-                print(f"{command.strip()[5:].partition(" ")[0]} is a shell builtin") if command.strip()[5:].partition(" ")[0] in builtin_cmds else print(f"{command.strip()[5:].partition(" ")[0]}: command not found")
+                print(f"{command.strip()[5:].partition(" ")[0]} is a shell builtin") if command.strip()[5:].partition(" ")[0] in builtin_cmds else print(f"{command.strip()[5:].partition(" ")[0]}: not found")
                 sys.stdout.write("$ ")
             else:
                 print(f"{command}: command not found")
