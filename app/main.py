@@ -1,56 +1,67 @@
 import sys
 import os
-from pathlib import Path
-
-PATH = os.environ.get("PATH", "").split(":")
+import shutil
 
 def main():
     # Uncomment this block to pass the first stage
-    sys.stdout.write("$ ")
     builtin_cmds = ["echo", "exit","type"]
+   
+    # Wait for user input
+    while True:
+        output = ""
+        try:
+            sys.stdout.write("$ ")
+            sys.stdout.flush()
 
-    try:
-        # Wait for user input
-        while True:
-            command: str = input()
+            line: str = input()
+            parts = line.strip().split()
 
-            # if command.strip().split()[0] in builtins_cmds:
-            
-            if command.strip() == "exit 0":
-                exit(0)
-            elif command.strip().startswith("echo "):
-                print(command.strip()[5:])
-                sys.stdout.write("$ ")
-            elif command.strip().startswith("type "): #and command.strip().split()[1].strip in builtins_cmds:
-                
-                sub_cmd = command.strip()[5:].partition(" ")[0]
-                found_match = False
-                for p in PATH:
-                    if p.find(f"/{sub_cmd}") != -1 and os.path.isfile(f"{p}/{sub_cmd}") and os.access(p, os.X_OK):
-                        print(f"{sub_cmd} is {p}")
-                        found_match = True
-                        break
+            if not parts:
+                continue
 
-                # if sub_cmd in builtin_cmds:
-                
-                if sub_cmd not in builtin_cmds and not found_match:
-                    print(f"{sub_cmd}: not found") 
+            command = parts[0]
+            args = parts[1:] if len(parts) > 1 else []
 
-                
+            if command in builtin_cmds:
+                if command == "type":
+                    if args:
+                        try:
+                            arg_cmd = str(args[0])
+                            if arg_cmd in builtin_cmds:
+                                output = f"{arg_cmd} is a shell builtin"
+                            elif p := shutil.which(arg_cmd):
+                                output = f"{arg_cmd} is {p}"
+                            else:
+                                output = f"{arg_cmd}: not found"
+                        except IndexError:
+                            output = "Please enter a command to check its type."
+                        except Exception:
+                            output = f"{arg_cmd}: unable to read argument to type command"
+                    else:
+                        output = "type: not enough arguments"
+                        
+                elif command == "echo":
+                    output = " ".join(args)
 
-                
-                # else print(f"{command.strip()[5:].partition(" ")[0]}: not found")
-                sys.stdout.write("$ ")
+                elif command == "exit":
+                    try:
+                        exit_code = int(args[0]) if args else 0
+                        exit(exit_code)
+                    except ValueError:
+                        output = "exit: numeric argument required"
+                        
+
             else:
-                print(f"{command}: command not found")
-                sys.stdout.write("$ ")
-            
-    except KeyboardInterrupt as e:
-        print("\nExiting...")
-        sys.exit(0)
-    finally:
-        sys.stdout.flush()
-        exit(0)
+                output = f"{command}: command not found"
+
+            print(output)
+        
+        except KeyboardInterrupt or EOFError as e:
+            print("\nExiting...")
+            sys.exit(0)
+        
+
+            # exit(0)
 
 if __name__ == "__main__":
     main()
