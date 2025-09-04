@@ -1,10 +1,10 @@
 import sys
-import os
+import subprocess
 import shutil
 
 def main():
     # Uncomment this block to pass the first stage
-    builtin_cmds = ["echo", "exit","type"]
+    builtin_cmds = {"echo", "exit","type"}
    
     # Wait for user input
     while True:
@@ -49,10 +49,21 @@ def main():
                         exit(exit_code)
                     except ValueError:
                         output = "exit: numeric argument required"
-                        
+
+            elif shutil.which(command):
+                try:
+                    # system command execution
+                    result = subprocess.run(parts, capture_output=True, text=True)
+                    output = result.stdout if result.stdout else result.stderr
+                    sys.stdout.write(output)
+                    sys.stdout.flush()
+                    continue
+                except Exception as e:
+                    output = str(e)            
 
             else:
                 output = f"{command}: command not found"
+                
 
             print(output)
         
