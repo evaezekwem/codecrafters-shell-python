@@ -29,7 +29,7 @@ def main():
                     # current_dir = os.getcwd()
                     target_dir = args[0] if args else os.path.expanduser("~")
                     try:
-                        os.chdir(target_dir)
+                        os.chdir(os.path.expanduser("~")) if target_dir == "~" else os.chdir(target_dir)
                         continue
                     except Exception as e:
                         output = "cd: {}: No such file or directory".format(target_dir)
