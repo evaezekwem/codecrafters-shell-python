@@ -5,7 +5,7 @@ import os
 
 def main():
     # Uncomment this block to pass the first stage
-    builtin_cmds = {"echo", "exit","type","pwd"}
+    builtin_cmds = {"echo", "exit","type","pwd","cd"}
    
     # Wait for user input
     while True:
@@ -25,7 +25,16 @@ def main():
 
             # Handle built-in commands
             if command in builtin_cmds:
-                if command == "pwd":
+                if command == "cd":
+                    # current_dir = os.getcwd()
+                    target_dir = args[0] if args else os.path.expanduser("~")
+                    try:
+                        os.chdir(target_dir)
+                        continue
+                    except Exception as e:
+                        output = "cd: {}: No such file or directory".format(target_dir)
+
+                elif command == "pwd":
                     try:
                         output = os.getcwd()
                     except Exception as e:
