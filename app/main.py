@@ -2,6 +2,7 @@ import sys
 import subprocess
 import shutil
 import os
+import shlex
 
 def main():
     # Uncomment this block to pass the first stage
@@ -15,7 +16,9 @@ def main():
             sys.stdout.flush()
 
             line: str = input()
-            parts = line.strip().split()
+            # parts = line.strip().split()
+            parts = shlex.split(line, posix=True)
+            # print(parts)
 
             if not parts:
                 continue
@@ -58,17 +61,22 @@ def main():
                         output = "type: not enough arguments"
                         
                 elif command == "echo":
-                    # raw_line = r'{}'.format(line)
-                    # Check if the entire argument is enclosed in single quotes
-                    # output = raw_line[6:-1] if raw_line[:6] == "'" and raw_line[-1] == "'" else " ".join(args)
-                    # print(args)
-                    # exit()
-                    # if len(args) > 1:
-                        # output = 
-                    # output = " ".join(args)
-                    # output = output[1:len(output)-1] if output.startswith("'") and output.endswith("'") else output
-                    raw_line = line[5:]
-                    output = raw_line.replace("'","") if "'" in raw_line else " ".join(args)
+                    # raw_line = line[5:]
+
+                    # # Handle special case for double quotes
+                    # if raw_line.startswith('"') or raw_line.endswith('"'):
+                    #     # echo "script  example"  "test""hello"
+                    #     output = " ".join([i.strip() for i in raw_line.split('"  "')]).replace('"','')
+                    #     # print(output)
+                    #     # # sys.stdout.write(output)
+                    #     # exit()
+                    
+                    # # Handle special case for single quotes
+                    # elif "'" in raw_line:
+                    #     output = raw_line.replace("'","") 
+                    
+                    # else:
+                    output = " ".join(args)
 
                 elif command == "exit":
                     try:
@@ -81,19 +89,10 @@ def main():
             elif shutil.which(command):
                 try:
                     # system command execution
-                    if command == "cat":
-                        # Handle multiple files and  spaces in files names
-                        parts = ["cat"]+[i.replace("'","") for i in line[4:].split(r"' '")] 
-                        result = subprocess.run(parts, capture_output=True, text=True)
-                        output = result.stdout if result.stdout else result.stderr
-                        sys.stdout.write(output)
-                        sys.stdout.flush()
-
-                    else:
-                        result = subprocess.run(parts, capture_output=True, text=True)
-                        output = result.stdout if result.stdout else result.stderr
-                        sys.stdout.write(output)
-                        sys.stdout.flush()
+                    result = subprocess.run(parts, capture_output=True, text=True)
+                    output = result.stdout if result.stdout else result.stderr
+                    sys.stdout.write(output)
+                    sys.stdout.flush()
                     continue
                 except Exception as e:
                     output = str(e)            
