@@ -1,10 +1,11 @@
 import sys
 import subprocess
 import shutil
+import os
 
 def main():
     # Uncomment this block to pass the first stage
-    builtin_cmds = {"echo", "exit","type"}
+    builtin_cmds = {"echo", "exit","type","pwd"}
    
     # Wait for user input
     while True:
@@ -22,8 +23,14 @@ def main():
             command = parts[0]
             args = parts[1:] if len(parts) > 1 else []
 
+            # Handle built-in commands
             if command in builtin_cmds:
-                if command == "type":
+                if command == "pwd":
+                    try:
+                        output = os.getcwd()
+                    except Exception as e:
+                        output = str(e)
+                elif command == "type":
                     if args:
                         try:
                             arg_cmd = str(args[0])
@@ -50,6 +57,7 @@ def main():
                     except ValueError:
                         output = "exit: numeric argument required"
 
+            # Handle external commands
             elif shutil.which(command):
                 try:
                     # system command execution
@@ -61,6 +69,7 @@ def main():
                 except Exception as e:
                     output = str(e)            
 
+            # Handle invalid commands
             else:
                 output = f"{command}: command not found"
                 
